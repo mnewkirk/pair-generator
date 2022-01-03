@@ -1,4 +1,4 @@
-var SecretSanta = function () {
+var PairGenerator = function () {
 
     this.names = [];
 
@@ -7,7 +7,7 @@ var SecretSanta = function () {
 };
 
 
-SecretSanta.prototype.add = function ( name ) {
+PairGenerator.prototype.add = function ( name ) {
 
     if ( this.names.indexOf( name ) !== -1 )
         throw new Error( 'Cannot redefine ' + name );
@@ -40,7 +40,7 @@ SecretSanta.prototype.add = function ( name ) {
 
 };
 
-SecretSanta.prototype.generate = function () {
+PairGenerator.prototype.generate = function () {
 
     var pairings = Object.create( null );
     var candidatePairings = Object.create( null );
@@ -77,20 +77,20 @@ SecretSanta.prototype.generate = function () {
 
     }, this );
 
-    var findNextGifter = function () {
+    var findNextMatch = function () {
 
         var names = Object.keys( candidatePairings );
 
         var minCandidateCount = _.min( names.map( function ( name ) { return candidatePairings[ name ].length; } ) );
-        var potentialGifters = names.filter( function ( name ) { return candidatePairings[ name ].length === minCandidateCount; } );
+        var potentialMatches = names.filter( function ( name ) { return candidatePairings[ name ].length === minCandidateCount; } );
 
-        return _.sample( potentialGifters );
+        return _.sample( potentialMatches );
 
     };
 
     while ( Object.keys( candidatePairings ).length > 0 ) {
 
-        var name = findNextGifter();
+        var name = findNextMatch();
 
         if ( candidatePairings[ name ].length === 0 )
             throw new Error('We haven\'t been able to find a match for ' + name + '! Press "Generate" to try again and, if it still doesn\'t work, try removing some exclusions from your rules. Sorry for the inconvenience!');
