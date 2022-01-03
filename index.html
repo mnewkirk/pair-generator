@@ -4,12 +4,12 @@
     <head>
 
         <meta charset="utf-8" />
-        <title>Secret Santa Generator</title>
+        <title>Pair Generator</title>
 
         <script src="vendors/Lodash-3.10.1.js"></script>
         <script src="vendors/Cryptojs.aes-3.1.2.js"></script>
 
-        <script src="./SecretSanta.js"></script>
+        <script src="./PairGenerator.js"></script>
 
         <style>
 
@@ -154,11 +154,11 @@
 
             <div class="part" style="overflow-y: auto">
                 <div class="instructions">
-                    <h1><img src="assets/mistletoe.png" style="vertical-align: middle" /> Secret Santa Generator</h1>
-                    <p>No signup, no email, no bullshit. Just a straightforward <a href="https://github.com/arcanis/secretsanta">open-source</a> tool to help you generate your secret santa pairings. One static page, and that's it.</p>
+                    <h1>Pair Generator</h1>
+                    <p>No signup, no email, no bullshit. Just a straightforward <a href="https://github.com/arcanis/secretsanta">open-source</a> tool to help you generate your pairings. One static page, and that's it.</p>
                     <p>In the most common case (no exclusion rules, pair each guest with another at random), enter the name of your guests one line at a time. Once done, press "generate" and you're all set: send the generated links to your guests (by mail, chat, whatever floats your boat) and their pairing will be revealed to them (and only them) once they open the link.</p>
                     <h2>Where does this tool come from?</h2>
-                    <p>I wanted to make a Secret Santa over Facebook without having to reveal to anyone my guests email addresses (so nothing that would require a backend). I also wanted not to know who was paired with me, so I had to find a way to somehow obfuscate the information. And being a developer, well, my first thought was "Let's AES it, for fun and profits!". Classic.</p>
+                    <p>Originally, from <a href="https://github.com/arcanis/secretsanta">an open-source secret santa generator</a>. I wanted to reuse the functionality for an easy coffee/chat mixer, that could also benefit from avoiding re-matching people subsequently.</p>
                 </div>
             </div>
 
@@ -172,21 +172,21 @@
 
         <script id="input-placeholder" type="text/placeholder">
             # You can add a user by adding a line
-            Santa
+            Steven
 
             # You can add some details if you want to, using parentheses after the name
-            Nicholas (the elf)
+            Amethyst (of Earth)
 
             # You can prevent someone from being paired with someone else
-            Maël !Aurélie
-            Aurélie !Maël
+            Garnet !Pearl
+            Pearl !Garnet
 
             # You can also exclude someone from being paired with multiple people
             # Careful: too many exclusion rules can make your secret santa less interesting!
-            Rudolph !Santa !Nicholas (the elf)
+            Steven !Greg !Connie
 
             # You can also cheat a bit and force someone to be paired with another
-            Nicholas (the saint) =Nicholas (the elf)
+            Ruby =Sapphire
 
             ...
         </script>
@@ -362,7 +362,7 @@
           if ( lines.length === 0 || lines.length === 1 && lines[ 0 ].length === 0 )
               return reset();
 
-          var santa = new SecretSanta();
+          var matcher = new MatchGenerator();
 
           for ( var t = 0, T = lines.length; t < T; ++ t ) {
 
@@ -374,7 +374,7 @@
               var name = match[ 1 ];
               var rules = match[ 2 ] ? match[ 2 ].match(/[!=][^!=]+/g) : null;
 
-              var person = santa.add( name );
+              var person = matcher.add( name );
 
               if (rules) {
 
@@ -396,7 +396,7 @@
           }
 
           try {
-              return success( santa.generate() );
+              return success( matcher.generate() );
           } catch ( err ) {
             console.error(err.stack)
               return error( err.message );
