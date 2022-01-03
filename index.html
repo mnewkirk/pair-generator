@@ -321,7 +321,7 @@
           if ( lines.length === 0 || lines.length === 1 && lines[ 0 ].length === 0 )
               return reset();
 
-          var matcher = new MatchGenerator();
+          var pairGen = new PairGenerator();
 
           for ( var t = 0, T = lines.length; t < T; ++ t ) {
 
@@ -333,7 +333,7 @@
               var name = match[ 1 ];
               var rules = match[ 2 ] ? match[ 2 ].match(/[!=][^!=]+/g) : null;
 
-              var person = matcher.add( name );
+              var person = pairGen.add( name );
 
               if (rules) {
 
@@ -355,7 +355,7 @@
           }
 
           try {
-              return success( matcher.generate() );
+              return success( pairGen.generate() );
           } catch ( err ) {
             console.error(err.stack)
               return error( err.message );
